@@ -1,6 +1,7 @@
 package com.imooc.o2o.service;
 
 import com.imooc.o2o.BaseTest;
+import com.imooc.o2o.dao.ShopDao;
 import com.imooc.o2o.dto.ShopExecution;
 import com.imooc.o2o.entity.Area;
 import com.imooc.o2o.entity.PersonInfo;
@@ -17,6 +18,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.Date;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
@@ -27,7 +29,11 @@ public class ShopServiceTest extends BaseTest {
     @Autowired
     private ShopService shopService;
 
+    @Autowired
+    private ShopDao shopDao;
+
     @Test
+    @Ignore
     public  void  testModifyShop() throws ShopOperationException,FileNotFoundException{
        Shop shop=new Shop();
        shop.setShopId(1l);
@@ -36,6 +42,16 @@ public class ShopServiceTest extends BaseTest {
         InputStream is=new FileInputStream(shopImg);
         ShopExecution shopExecution= shopService.modifyShop(shop,is,"dabai.jpg");
         System.out.println("新的图片地址："+shopExecution.getShop().getShopImg());
+    }
+    @Test
+    public void testGetShopList(){
+        Shop shopCondition=new Shop();
+        ShopCategory sc=new ShopCategory();
+        sc.setShopCategoryId(2l);
+        shopCondition.setShopCategory(sc);
+        ShopExecution se=shopService.getShopList(shopCondition,2,2);
+        System.out.println("店铺列表数"+se.getShopList().size());
+        System.out.println("店铺总数："+se.getCount());
     }
 
 
@@ -54,13 +70,13 @@ public class ShopServiceTest extends BaseTest {
         shop.setShopCategory(shopCategory);
         shop.setPhone("test3");
         shop.setCreateTime(new Date());
-        shop.setShopName("测试的店铺3");
+        shop.setShopName("测试的店铺4");
         shop.setAdvice("审核中");
         shop.setShopDesc("test3");
         shop.setShopAddr("test3");
         shop.setEnableStatus(ShopStateEnum.CHECK.getState());
 
-        File shopImg=new File("G:\\image\\image\\xiaohuangren.jpg");
+        File shopImg=new File("G:\\image\\image\\dabai.jpg");
         InputStream is=new FileInputStream(shopImg);
         ShopExecution se= shopService.addShop(shop,is,shopImg.getName());
         assertEquals(ShopStateEnum.CHECK.getState(),se.getState());

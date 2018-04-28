@@ -22,6 +22,15 @@ public interface ShopService {
     Shop getByShopId(long shopId);
 
     /**
+     * 根据ShopCondition分页返回相应店铺列表
+     * @param shopCondition
+     * @param pageIndex
+     * @param pageSize
+     * @return
+     */
+    public ShopExecution getShopList(Shop shopCondition,int pageIndex,int pageSize);
+
+    /**
      * 更新店铺信息，包括对图片的处理
      * @param shop
      * @param shopImgInputStream

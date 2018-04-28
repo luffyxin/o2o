@@ -6,6 +6,7 @@ import com.imooc.o2o.entity.Shop;
 import com.imooc.o2o.enums.ShopStateEnum;
 import com.imooc.o2o.exceptions.ShopOperationException;
 import com.imooc.o2o.service.ShopService;
+import com.imooc.o2o.util.PageCalculator;
 import com.imooc.o2o.util.PathUtil;
 import com.imooc.o2o.util.imageUtil;
 import com.sun.imageio.plugins.common.ImageUtil;
@@ -13,9 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.File;
-import java.io.InputStream;
+import java.io.*;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by Administrator on 2018/2/2.
@@ -29,6 +30,21 @@ public class ShopServiceImpl implements ShopService {
     @Override
     public Shop getByShopId(long shopId) {
         return shopDao.queryByShopId(shopId);
+    }
+
+    @Override
+    public ShopExecution getShopList(Shop shopCondition, int pageIndex, int pageSize) {
+        int rowIndex= PageCalculator.calculateRowIndex(pageIndex,pageSize);
+        List<Shop> shopList=shopDao.queryShopList(shopCondition,rowIndex,pageSize);
+        int count=shopDao.queryShopCount(shopCondition);
+        ShopExecution se=new ShopExecution();
+        if(shopList!=null){
+            se.setShopList(shopList);
+            se.setCount(count);
+        }else{
+            se.setState(ShopStateEnum.INNER_ERROR.getState());
+        }
+        return se;
     }
 
     @Override
@@ -101,10 +117,28 @@ public class ShopServiceImpl implements ShopService {
         return new ShopExecution(ShopStateEnum.CHECK, shop);
     }
 
-    private void addShopImg(Shop shop, InputStream shopImgInputStream, String fileName) {
+    private void addShopImg(Shop shop, InputStream shopImgInputStream, String fileName) throws IOException {
         //获取shop图片目录的相对值路径
         String dest = PathUtil.getShopImagePath(shop.getShopId());
         String shopImgAddr = imageUtil.generateThumbnail(shopImgInputStream, fileName, dest);
+
+
+
+        BufferedInputStream bis=new BufferedInputStream(shopImgInputStream);
+        OutputStream outputStream = new FileOutputStream("D:/xixi.jpg");
+        int size = 0;
+        byte[] buf = new byte[1024];
+        //边读边写
+        //边读边写
+        while ((size = bis.read(buf)) != -1) {
+            outputStream.write(buf, 0, size);
+        }
+        //刷新文件流
+        outputStream.flush();
+
+
+
+
         shop.setShopImg(shopImgAddr);
     }
 }

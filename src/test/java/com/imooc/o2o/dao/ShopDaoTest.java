@@ -10,6 +10,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Date;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
@@ -21,12 +22,36 @@ public class ShopDaoTest extends BaseTest{
     private  ShopDao shopDao;
 
     @Test
+    @Ignore
     public  void testQueryByShopId(){
         long shopId=1;
         Shop shop=shopDao.queryByShopId(shopId);
         System.out.println("areaid"+shop.getArea().getAreaId());
         System.out.println("areaname"+shop.getArea().getAreaName());
     }
+    @Test
+    public void TestQueryShopListAndCount(){
+        Shop shopCondition=new Shop();
+        PersonInfo owner=new PersonInfo();
+        owner.setUserId(1l);
+        shopCondition.setOwner(owner);
+        List<Shop> shopList=shopDao.queryShopList(shopCondition,0,5);
+        int count=shopDao.queryShopCount(shopCondition);
+        System.out.println("店铺总数："+count);
+        System.out.println("店铺列表的大小"+shopList.size());
+
+        ShopCategory sc=new ShopCategory();
+        sc.setShopCategoryId(2l);
+
+        shopCondition.setShopCategory(sc);
+        List<Shop> shopList2=shopDao.queryShopList(shopCondition,0,2);
+        int count2=shopDao.queryShopCount(shopCondition);
+        System.out.println("shopcount:"+count2);
+        System.out.println("店铺列表的大小："+shopList2.size());
+
+
+    }
+
 
     @Test
     @Ignore
@@ -43,7 +68,7 @@ public class ShopDaoTest extends BaseTest{
         shop.setShopCategory(shopCategory);
         shop.setPhone("test");
         shop.setCreateTime(new Date());
-        shop.setShopName("测试的店铺");
+        shop.setShopName("正式店铺");
         shop.setAdvice("审核中");
         shop.setShopDesc("test");
         shop.setShopAddr("test");

@@ -63,6 +63,8 @@ public class imageUtil {
             Thumbnails.of(thumbnailInputStream).size(200,200)
                     .watermark(Positions.BOTTOM_RIGHT,ImageIO.read(new File(basePath+ "/watermark.jpg")),0.25f)
                     .outputQuality(0.8f).toFile(dest);
+
+
         }catch (IOException e){
             logger.error(e.toString());
             e.printStackTrace();
@@ -104,7 +106,7 @@ public class imageUtil {
     }
 
     public static void main(String[] args) throws IOException {
-        Thumbnails.of(new File("G:\\image\\image\\xiaohuangren.jpg"))
+        Thumbnails.of(new File("G:\\image\\image\\dabai.jpg"))
                 .size(200,200).watermark(Positions.BOTTOM_RIGHT,ImageIO.read(new File(basePath + "/watermark.jpg")),0.25f).outputQuality(0.8f)
                 .toFile("G:\\image\\image\\xiaohuangrennew.jpg");
     }

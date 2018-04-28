@@ -61,7 +61,7 @@ public class ShopManagementController {
             try {
                 Shop shop = shopService.getByShopId(shopId);
                 List<Area> areaList = areaService.getAreaList();
-                modelMap.put("shop", shop);
+                 modelMap.put("shop", shop);
                 modelMap.put("areaList", areaList);
                 modelMap.put("success", true);
             }
@@ -131,7 +131,9 @@ public class ShopManagementController {
         }
         //2.注册店铺
         if(shop!=null&&shopImg!=null){
-            PersonInfo owner=(PersonInfo)request.getSession().getAttribute("user");
+            PersonInfo owner=new PersonInfo();
+            // TODO: 2018/4/26 Session
+            owner.setUserId(1l);
             shop.setOwner(owner);
 
             ShopExecution se= null;
@@ -233,7 +235,7 @@ public class ShopManagementController {
                 modelMap.put("success",false);
                 modelMap.put("errMsg",e.getMessage());
             }
-            if(se.getState()== ShopStateEnum.CHECK.getState()){
+            if(se.getState()== ShopStateEnum.SUCCESS.getState()){
                 modelMap.put("success",true);
             }else {
                 modelMap.put("success",false);
